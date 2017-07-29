@@ -11,9 +11,22 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        ndk{
-            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+        //配置Cmake运行参数,在defaultconfig节点下配置
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+
+                abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+                // 不写的话是全平台（armeabi, armeabi-v7a, arm64-v8a, x86, x86_64, mips, mips64）
+                // 若写的话，又有两处可写：一处就是这里的cmake标签中，另一处就是在defaultConfig标签中再新建一个ndk标签
+                // 生成so文件的地址为：app/build/intermediates/cmake/debug/obj/armeabi/libserial_port.so
+            }
         }
+
+        //方式二
+//        ndk{
+//            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+//        }
     }
     buildTypes {
         release {
@@ -22,6 +35,7 @@ android {
         }
     }
 
+    //关联CMake的程序清单文件,path 指向cmake文件路径
     externalNativeBuild{
         cmake{
             path "CMakeLists.txt"
